@@ -1,20 +1,146 @@
 [
   {
+    "name": "University of Michigan",
+    "acceptance_rate": 18.0,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 55
+  },
+  {
+    "name": "University of Southern California",
+    "acceptance_rate": 9.2,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 80
+  },
+  {
+    "name": "Stanford University",
+    "acceptance_rate": 3.6,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 99
+  },
+  {
+    "name": "Cornell University",
+    "acceptance_rate": 8.4,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 71
+  },
+  {
+    "name": "University of Pennsylvania",
+    "acceptance_rate": 5.4,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 78
+  },
+  {
+    "name": "Princeton University",
+    "acceptance_rate": 4.5,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 92
+  },
+  {
+    "name": "Columbia University",
+    "acceptance_rate": 3.9,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 67
+  },
+  {
+    "name": "Brown University",
+    "acceptance_rate": 5.4,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 73
+  },
+  {
+    "name": "Yale University",
+    "acceptance_rate": 3.9,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 84
+  },
+  {
+    "name": "Harvard University",
+    "acceptance_rate": 3.6,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 94
+  },
+  {
+    "name": "Purdue University",
+    "acceptance_rate": 50.3,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 13
+  },
+  {
+    "name": "University of Illinois Urbana-Champaign",
+    "acceptance_rate": 42.4,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 28
+  },
+  {
+    "name": "Massachusetts Institute of Technology (MIT)",
+    "acceptance_rate": 4.6,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 87
+  },
+  {
+    "name": "University of North Carolina at Chapel Hill",
+    "acceptance_rate": 15.3,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 43
+  },
+  {
+    "name": "University of Texas at Austin",
+    "acceptance_rate": 26.6,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 33
+  },
+  {
+    "name": "Georgia Institute of Technology",
+    "acceptance_rate": 13.8,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 37
+  },
+  {
+    "name": "New York University",
+    "acceptance_rate": 8.0,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 74
+  },
+  {
+    "name": "Duke University",
+    "acceptance_rate": 5.1,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 64
+  },
+  {
+    "name": "Northwestern University",
+    "acceptance_rate": 7.0,
+    "SAT_quartiles": [],
+    "applying": true,
+    "desireability": 65
+  },
+  {
     "name": "University of Chicago",
     "acceptance_rate": 4.48,
     "SAT_quartiles": [
       1510,
       1540,
       1560
-    ]
-  },
-  {
-    "name": "Harvard University",
-    "acceptance_rate": 4.18,
-    "SAT_quartiles": [
-      1500,
-      1540,
-      1580
-    ]
+    ],
+    "applying": true,
+    "desireability": 71
   }
 ]
