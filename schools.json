@@ -16,5 +16,14 @@
       1540,
       1580
     ]
+  },
+  {
+    "name": "Uncompetitive College",
+    "acceptance_rate": 50,
+    "SAT_quartiles": [
+      1500,
+      1540,
+      1580
+    ]
   }
 ]
