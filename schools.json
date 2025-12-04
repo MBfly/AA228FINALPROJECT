@@ -1,0 +1,20 @@
+[
+  {
+    "name": "University of Chicago",
+    "acceptance_rate": 4.48,
+    "SAT_quartiles": [
+      1510,
+      1540,
+      1560
+    ]
+  },
+  {
+    "name": "Harvard University",
+    "acceptance_rate": 4.18,
+    "SAT_quartiles": [
+      1500,
+      1540,
+      1580
+    ]
+  }
+]
