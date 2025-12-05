@@ -1,6 +1,5 @@
 from scipy.stats import norm
 import json
-
 from statistics import NormalDist
 import math
 import csv
@@ -18,10 +17,6 @@ with open("sat_percentiles.csv", "r", newline="") as f:
         sat_lookup[score] = percentile
 
 normal = NormalDist()  # standard normal
-
-def normal_cdf(x, mu, sigma):
-    z = (x - mu) / sigma
-    return 0.5 * (1 + math.erf(z / math.sqrt(2)))
 
 
 #School: name, acceptance rate, 
