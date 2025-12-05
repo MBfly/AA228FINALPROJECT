@@ -3,10 +3,19 @@ import json
 
 from statistics import NormalDist
 import math
+import csv
 
 
 with open("schools.json", "r") as f:
     colleges = json.load(f)
+
+sat_lookup = {}
+with open("sat_percentiles.csv", "r", newline="") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        score = int(row["score"])
+        percentile = int(row["percentile"])
+        sat_lookup[score] = percentile
 
 normal = NormalDist()  # standard normal
 
@@ -14,8 +23,6 @@ def normal_cdf(x, mu, sigma):
     z = (x - mu) / sigma
     return 0.5 * (1 + math.erf(z / math.sqrt(2)))
 
-
-#Qs: what's the data structure of the school?
 
 #School: name, acceptance rate, 
 
@@ -29,7 +36,14 @@ def get_essay_percentile(essay_score):
 
     return p
 
-def get_probability(school, sat_percentile, gpa_percentile, essay_score):
+def get_sat_percentile(sat_score): #Assumes SAT is divisible by 10
+    
+    return sat_lookup[sat_score]/100
+
+def get_probability(school, sat_score, gpa_percentile, essay_score):
+
+    sat_percentile = get_sat_percentile(sat_score)
+
     #weightings:
     w_sat = 0.25
     w_gpa = 0.25
@@ -73,17 +87,17 @@ def get_probability(school, sat_percentile, gpa_percentile, essay_score):
 #Testing probability
 
 #highly competitive student, highly competitive school
-test1 = get_probability("Harvard University", 0.99, 0.99, 1150)
+test1 = get_probability("Harvard University", 1550, 0.99, 1150)
 print(f"Competitive student at Harvard: {test1}")
 
 #highly competitive student, uncompetitive school
-test2 = get_probability("Uncompetitive College", 0.99, 0.99, 1150)
+test2 = get_probability("Uncompetitive College", 1550, 0.99, 1150)
 print(f"Competitive student at Uncompetitive school: {test2}")
 
 #uncompetitive student, highly competitive school
-test3 = get_probability("Harvard University", 0.3, 0.2, 900)
+test3 = get_probability("Harvard University", 1200, 0.2, 900)
 print(f"Uncompetitive student at Harvard: {test3}")
 
 #uncompetitive student, uncompetitive school
-test4 = get_probability("Uncompetitive College", 0.3, 0.2, 900)
+test4 = get_probability("Uncompetitive College", 1200, 0.2, 900)
 print(f"Uncompetitive student at Uncompetitive school: {test4}")
