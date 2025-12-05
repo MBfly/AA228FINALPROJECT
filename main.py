@@ -15,17 +15,21 @@ def load_school_data(file_path: str) -> None:
 
 def print_schools_list(schools_data: List[School]) -> None:
     for i, school in enumerate(schools_data):
-        print(f"{i+1}. {school["name"]}")
+        print(f"{i+1}. {school['name']}")
 
 
 def __main__():
     load_school_data("schools.json")
     print_schools_list(schools_data)
     student = {
-        "sat_score": 1550,
-        "gpa": 3.8,
-        "gpa_percentile": 0.85,
-        "application_scores": {"Harvard University": 1130, "Columbia University": 1082},
+        "sat_score": 1350,
+        "gpa": 4.0,
+        "gpa_percentile": 0.75,
+        "application_scores": {
+            "Harvard University": 1130,
+            "Columbia University": 1082,
+            "Stanford University": 1210,
+        },
         "application_score_history": {
             "Harvard University": [
                 {"score": 1021, "hours": 2},
@@ -33,6 +37,11 @@ def __main__():
             ],
             "Columbia University": [
                 {"score": 1082, "hours": 2},
+            ],
+            "Stanford University": [
+                {"score": 950, "hours": 2},
+                {"score": 1050, "hours": 4},
+                {"score": 1210, "hours": 6},
             ],
         },
     }

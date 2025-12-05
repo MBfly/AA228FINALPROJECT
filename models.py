@@ -53,25 +53,54 @@ def expected_essay_improvement(essay_score_history: List[Dict[str, float]]) -> f
     `hours` is total hours spent on the essay at that point
     Fits a log curve to the data and returns projected score after 2 more hours
     """
-    # Handle edge case: one data point or less
+    # Handle edge cases with limited data
     if len(essay_score_history) <= 1:
         if len(essay_score_history) == 0:
             return 800  # Default starting score
         # If just one datapoint, assume linear improvement with slope of 7
         current_score: float = essay_score_history[0]["score"]
         return current_score + 7 * 2
+    if len(essay_score_history) == 2:
+        h0, h1 = essay_score_history[0]["hours"], essay_score_history[1]["hours"]
+        s0, s1 = essay_score_history[0]["score"], essay_score_history[1]["score"]
+        slope = (s1 - s0) / (max(1e-6, h1 - h0))
+        return s1 + slope * 2.0
 
-    hours: np.ndarray = np.array([point["hours"] for point in essay_score_history])
-    scores: np.ndarray = np.array([point["score"] for point in essay_score_history])
+    hours: np.ndarray = np.array(
+        [point["hours"] for point in essay_score_history], dtype=float
+    )
+    scores: np.ndarray = np.array(
+        [point["score"] for point in essay_score_history], dtype=float
+    )
+
+    # Shift hours so log arguments stay positive
+    min_shift: float = max(0.0, 1e-3 - float(np.min(hours)))
+    hours_shifted: np.ndarray = hours + min_shift
 
     def log_curve(x: np.ndarray, a: float, b: float, c: float) -> np.ndarray:
         return a * np.log(x + b) + c
 
+    # Constrain b to keep x + b > 0; allow more iterations to converge
+    lower_bounds: List[float] = [-np.inf, 1e-3, -np.inf]
+    upper_bounds: List[float] = [np.inf, np.inf, np.inf]
     initial_guess: List[float] = [10.0, 1.0, float(np.mean(scores))]
-    params, _ = curve_fit(log_curve, hours, scores, p0=initial_guess)
 
-    current_hours: float = float(np.max(hours))
-    future_hours: float = current_hours + 2.0
+    try:
+        params, _ = curve_fit(
+            log_curve,
+            hours_shifted,
+            scores,
+            p0=initial_guess,
+            bounds=(lower_bounds, upper_bounds),
+            maxfev=5000,
+        )
+        current_hours: float = float(np.max(hours_shifted))
+        future_hours: float = current_hours + 2.0
+        projected_score: float = float(log_curve(future_hours, *params))
+    except Exception:
+        # Fallback: simple linear extrapolation
+        total_hours_spent: float = float(hours[-1] - hours[0])
+        slope: float = float(scores[-1] - scores[0]) / (total_hours_spent + 1e-6)
+        projected_score = float(scores[-1] + slope * 2.0)
 
-    projected_score: float = float(log_curve(future_hours, *params))
     return projected_score

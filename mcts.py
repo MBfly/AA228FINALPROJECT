@@ -3,14 +3,15 @@ import math
 import random
 import copy
 import time
+import numpy as np
 from models import School, Student, expected_essay_improvement, school_reward
 from calculate_college_probability import get_probability
 
 
-MAX_HOURS_PER_SCHOOL = 2.0
-COST_PER_HOUR = -0.5  # Desirability points per hour spent
+MAX_HOURS_PER_SCHOOL = 20.0
+COST_PER_HOUR = -0.1  # desirability points cost per hour spent
 STOP_ACTION = "STOP"
-DEFAULT_TIME_LIMIT = 30.0  # seconds
+DEFAULT_TIME_LIMIT = 15.0  # seconds
 DEFAULT_EXPLORATION_WEIGHT = 1.41
 DEFAULT_EXPLOITATION_WEIGHT = 1.0
 
@@ -94,25 +95,36 @@ def calculate_expected_reward(
     Uses Monte Carlo sampling to handle non-linear reward structure
     """
     num_samples = 1000
+
+    applying_schools = [school for school in schools_data if school["applying"]]
+    if not applying_schools:
+        time_cost = COST_PER_HOUR * total_hours_spent
+        return time_cost
+
+    num_schools = len(applying_schools)
+    school_names = [school["name"] for school in applying_schools]
+
+    probabilities = np.array(
+        [
+            get_probability(
+                school_name,
+                student["sat_score"],
+                student["gpa_percentile"],
+                student["application_scores"].get(school_name, 700),
+            )
+            for school_name in school_names
+        ]
+    )
+
+    random_values = np.random.random((num_samples, num_schools))
+
+    admitted_mask = random_values < probabilities
+
     total_reward = 0.0
-
-    for _ in range(num_samples):
-        admitted_schools = []
-        for school in schools_data:
-            if school["applying"]:
-                school_name = school["name"]
-                essay_score = student["application_scores"].get(school_name, 700)
-
-                prob = get_probability(
-                    school_name,
-                    student["sat_score"],
-                    student["gpa_percentile"],
-                    essay_score,
-                )
-
-                if random.random() < prob:
-                    admitted_schools.append(school_name)
-
+    for sample_idx in range(num_samples):
+        admitted_schools = [
+            school_names[i] for i in range(num_schools) if admitted_mask[sample_idx, i]
+        ]
         sample_reward = school_reward(admitted_schools, schools_data)
         total_reward += sample_reward
 
@@ -194,6 +206,12 @@ class MCTSNode:
 
     def rollout(self) -> float:
         """Simulate random playout from this node"""
+        # If we've already chosen to stop or have no remaining actions, evaluate immediately
+        if self.is_terminal():
+            return calculate_expected_reward(
+                self.student, self.schools_data, self.total_hours_spent
+            )
+
         current_student = copy_student(self.student)
         current_schools = copy_schools(self.schools_data)
         current_hours = self.total_hours_spent
@@ -204,12 +222,7 @@ class MCTSNode:
             if len(actions) == 1 and actions[0] == STOP_ACTION:
                 break
 
-            if STOP_ACTION in actions and random.random() < 0.3:
-                break
-
-            action = random.choice(
-                [a for a in actions if a != STOP_ACTION] or [STOP_ACTION]
-            )
+            action = random.choice(actions)
             if action == STOP_ACTION:
                 break
 
